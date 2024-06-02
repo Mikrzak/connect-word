@@ -5,34 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Word</title>
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/public/style.css">
 </head>
 <body>
 
     <div id="loginScreen">
+
+        <div id="titleDiv">
+            <p style="font-size: 20px;" >Connect Word⠀⠀⠀⠀⠀⠀⠀⠀⠀</p>
+            <p style="font-size: 11px;" id="searchingText">Searching... (reload page to cancel)</p>
+            <p style="font-size: 11px;" id="errorText"></p>
+        </div><br><br>
+
         <form id="form">
             <label for="nickInput">Nick</label>
-            <input id="nickInput" autocomplete="off" /><br>
+            <input id="nickInput" autocomplete="off" type="text" maxlength="10"></input><br>
             <label for="roomInput">Room</label>
-            <input id="roomInput" autocomplete="off" /><br>
+            <input id="roomInput" autocomplete="off" type="number" maxlength="10"></input><br>
 
             <button id="joinButton">Go!</button>
             <label for="joinButton">Press to join a lobby or host one of the same name</label>
-        </form>
+        </form><br><br>
 
-        <p id="searchingText">Searching... (reload page to cancel)</p>
-        <p id="errorText"></p>
+        <div id="tutorial">
+            <p style="font-size: 19px">How to play?</p>
+            <p>- Take turns dropping letters by clicking on a column on the board</p>
+            <p>- Get points by creating words (colors don't matter)</p>
+            <p>⠀or connecting 4 tiles in a row of the same color</p>
+        </div>
+
+        <div id="jaskier">
+            <img src="public/jaskier.jpg"></img>
+        </div>
+
     </div>
 
     <div id="gameScreen" style="display: none">
 
-        <p id="namesText"></p>
-        <p id="pointsText">0 points</p>
+        <div id="gameInfo">
+            <p id="namesText"></p>
+            <p id="pointsText">0 points</p>
+        </div>
 
         <ul id="buttonGridList" style="list-style-type: none;"></ul>
 
         <ul id="buttonHandList" style="list-style-type: none; line-height: 0px;"></ul>
 
-        <ul id="buttonLetterList" style="list-style-type: none; line-height: 0px; position: absolute; left: 50vw; top: 50px; width: 30vw;"></ul>
+        <ul id="buttonLetterList" style="list-style-type: none; line-height: 0px; position: absolute; left: 22vw; top: 94px; width: 30vw;"></ul>
     </div>
 
     <script>
@@ -150,7 +169,7 @@
             for(var j = 0; j < buttonGrid[0].length; j++){
 
                 var button = document.createElement('button');
-                button.style = "width: 50px; height: 50px; font-size: 10px; font-family: 'Consolas'; background-color: 'GGGGGG';";
+                //button.style = "width: 50px; height: 50px; font-size: 10px; font-family: 'Consolas'; background-color: 'GGGGGG';";
                 button.innerHTML = " ";
 
                 button.onclick = trySendMoveRequest;
@@ -172,8 +191,9 @@
             element.style.display = "inline";
 
             var button = document.createElement('button');
+            button.id = "bagButton";
 
-            button.style = "width: 50px; height: 50px; font-size: 10px; font-family: 'Consolas'; background-color: 'GGGGGG';";
+            //button.style = "width: 50px; height: 50px; font-size: 10px; font-family: 'Consolas'; background-color: 'GGGGGG';";
 
             //button.innerHTML = letterBag[0][i] + " " + letterBag[1][i];
             //button.onclick = null;
@@ -192,7 +212,7 @@
 
             var button = document.createElement('button');
 
-            button.style = "width: 50px; height: 50px; font-size: 10px; font-family: 'Consolas'; background-color: 'GGGGGG';";
+            //button.style = "width: 50px; height: 50px; font-size: 10px; font-family: 'Consolas'; background-color: 'GGGGGG';";
             button.innerHTML = hand[i];
             button.onclick = pickLetterIndex;
 
@@ -216,15 +236,20 @@
                     
                     buttonGrid[i][j].innerHTML = "⠀";
                     buttonGrid[i][j].style.backgroundColor = "";
+                    buttonGrid[i][j].style.backgroundImage = "";
                 }
                 else{
 
                     buttonGrid[i][j].innerHTML = updatedGrid[i][j][0];
 
-                    if(updatedGrid[i][j][1] == "red")
+                    if(updatedGrid[i][j][1] == "red"){
+                        buttonGrid[i][j].style.backgroundImage = "none";
                         buttonGrid[i][j].style.backgroundColor = "#FF3939";
-                    else if(updatedGrid[i][j][1] == "blue")
+                    }
+                    else if(updatedGrid[i][j][1] == "blue"){
+                        buttonGrid[i][j].style.backgroundImage = "none";
                         buttonGrid[i][j].style.backgroundColor = "#25A3FE";
+                    }
                 }
             }
         }
